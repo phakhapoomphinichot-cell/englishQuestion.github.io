@@ -4,3 +4,153 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>English Test Registration</title>
+
+    <!-- CSS สำหรับการออกแบบ -->
+    <style>
+        /* ----- General reset ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ----- Body and General Layout ----- */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #4CAF50;
+            font-size: 30px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        label {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 10px;
+            text-align: left;
+            display: block;
+        }
+
+        select, button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #f9f9f9;
+            transition: all 0.3s;
+        }
+
+        select:focus, button:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            margin-top: 30px;
+            font-size: 18px;
+            color: #333;
+            font-weight: 600;
+            display: none;
+        }
+
+        /* ----- Responsive Design ----- */
+        @media (max-width: 600px) {
+            .container {
+                width: 90%;
+                padding: 25px;
+            }
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <!-- HTML ฟอร์มการลงทะเบียน -->
+    <div class="container">
+        <h1>English Test Registration</h1>
+        <form id="registrationForm">
+            <label for="level">Choose your English level:</label>
+            <select id="level" name="level" required>
+                <option value="">Select level</option>
+                <option value="A1">A1</option>
+                <option value="A2">A2</option>
+                <option value="B1">B1</option>
+                <option value="B2">B2</option>
+                <option value="C1">C1</option>
+                <option value="C2">C2</option>
+            </select>
+
+            <label for="questions">Choose number of questions:</label>
+            <select id="questions" name="questions" required>
+                <option value="">Select number of questions</option>
+                <option value="50">50</option>
+            </select>
+
+            <button type="submit">Register</button>
+        </form>
+
+        <div id="result">
+            <h2>Registration Successful!</h2>
+            <p id="resultDetails"></p>
+        </div>
+    </div>
+
+    <!-- JavaScript สำหรับตรวจสอบข้อมูลในฟอร์ม -->
+    <script>
+        // ฟังก์ชันจัดการการส่งฟอร์ม
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // ป้องกันการรีเฟรชหน้า
+
+            var level = document.getElementById('level').value;
+            var questions = document.getElementById('questions').value;
+
+            // ตรวจสอบว่าผู้ใช้เลือกระดับภาษาและจำนวนข้อสอบ
+            if (level && questions === '50') {
+                // แสดงข้อความผลลัพธ์
+                document.getElementById('result').style.display = 'block';
+                document.getElementById('resultDetails').textContent = 
+                    `You have chosen level: ${level} with 50 questions. Good luck!`;
+            } else {
+                // แจ้งเตือนหากข้อมูลไม่ครบ
+                alert('Please select a level and 50 questions.');
+            }
+        });
+    </script>
+
+</body>
+</html>
