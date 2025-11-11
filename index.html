@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เว็บไซต์ฝึกภาษาอังกฤษ</title>
-    <link rel="stylesheet" href="style.css">
+    <title>คำถามฝึกภาษา</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>ฝึกภาษาอังกฤษ</h1>
-        <p>เลือกระดับความยากและจำนวนข้อสอบที่ต้องการฝึก</p>
 
-        <!-- เลือกระดับความยาก -->
-        <div class="select-container">
+    <div class="container">
+        <h1>เลือกคำถามฝึกภาษา</h1>
+
+        <!-- เลือกรูปแบบการฝึก -->
+        <div class="form-group">
             <label for="difficulty">เลือกระดับความยาก:</label>
-            <select id="difficulty" name="difficulty">
+            <select id="difficulty">
                 <option value="A1">A1</option>
                 <option value="A2">A2</option>
                 <option value="B1">B1</option>
@@ -24,25 +24,18 @@
             </select>
         </div>
 
-        <!-- เลือกจำนวนข้อสอบ -->
-        <div class="select-container">
-            <label for="questions">เลือกจำนวนข้อสอบ:</label>
-            <select id="questions" name="questions">
-                <option value="10">10 ข้อ</option>
-                <option value="20">20 ข้อ</option>
-                <option value="30">30 ข้อ</option>
-                <option value="40">40 ข้อ</option>
-                <option value="50">50 ข้อ</option>
-            </select>
+        <div class="form-group">
+            <label for="questions">จำนวนคำถาม:</label>
+            <input type="number" id="questions" value="3" min="1" max="10">
         </div>
 
-        <!-- ปุ่มเริ่ม -->
+        <!-- ปุ่มเริ่มฝึก -->
         <button id="startBtn">เริ่มฝึก</button>
 
-        <!-- ผลลัพธ์ที่แสดง -->
+        <!-- กล่องผลลัพธ์ -->
         <div id="quizResults" class="hidden">
-            <h3>ผลการฝึก</h3>
-            <p id="resultsText">กำลังโหลดคำถาม...</p>
+            <h2>ผลลัพธ์คำถาม</h2>
+            <div id="resultsText"></div>
         </div>
     </div>
 
