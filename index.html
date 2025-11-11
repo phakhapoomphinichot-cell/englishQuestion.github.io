@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Test Registration</title>
+    <style>
+        /* General reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 10px;
+            display: block;
+            text-align: left;
+        }
+
+        select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        select {
+            background-color: #fafafa;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .container {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>English Test Registration</h1>
+        <form id="registrationForm">
+            <label for="level">Choose your English level:</label>
+            <select id="level" name="level" required>
+                <option value="">Select level</option>
+                <option value="A1">A1</option>
+                <option value="A2">A2</option>
+                <option value="B1">B1</option>
+                <option value="B2">B2</option>
+                <option value="C1">C1</option>
+                <option value="C2">C2</option>
+            </select>
+
+            <label for="questions">Choose number of questions:</label>
+            <select id="questions" name="questions" required>
+                <option value="">Select number of questions</option>
+                <option value="50">50</option>
+            </select>
+
+            <button type="submit">Register</button>
+        </form>
+
+        <div id="result" style="display:none;">
+            <h2>Registration Successful!</h2>
+            <p id="resultDetails"></p>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript to handle the form submission
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            var level = document.getElementById('level').value;
+            var questions = document.getElementById('questions').value;
+
+            if (level && questions === '50') { // Check if both fields are selected and 50 questions
+                // Display the result message
+                document.getElementById('result').style.display = 'block';
+                document.getElementById('resultDetails').textContent = `You have chosen level: ${level} with 50 questions.`;
+            } else {
+                alert('Please choose a level and 50 questions.');
+            }
+        });
+    </script>
+
+</body>
+</html>
