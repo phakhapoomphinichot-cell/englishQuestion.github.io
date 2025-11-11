@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Test Registration</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>เว็บไซต์ฝึกภาษาอังกฤษ</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <!-- ฟอร์มการลงทะเบียน -->
     <div class="container">
-        <h1>English Test Registration</h1>
-        <form id="registrationForm">
-            <label for="level">Choose your English level:</label>
-            <select id="level" name="level" required>
-                <option value="">Select level</option>
+        <h1>ฝึกภาษาอังกฤษ</h1>
+        <p>เลือกระดับความยากและจำนวนข้อสอบที่ต้องการฝึก</p>
+
+        <!-- เลือกระดับความยาก -->
+        <div class="select-container">
+            <label for="difficulty">เลือกระดับความยาก:</label>
+            <select id="difficulty" name="difficulty">
                 <option value="A1">A1</option>
                 <option value="A2">A2</option>
                 <option value="B1">B1</option>
@@ -22,24 +22,30 @@
                 <option value="C1">C1</option>
                 <option value="C2">C2</option>
             </select>
+        </div>
 
-            <label for="questions">Choose number of questions:</label>
-            <select id="questions" name="questions" required>
-                <option value="">Select number of questions</option>
-                <option value="50">50</option>
+        <!-- เลือกจำนวนข้อสอบ -->
+        <div class="select-container">
+            <label for="questions">เลือกจำนวนข้อสอบ:</label>
+            <select id="questions" name="questions">
+                <option value="10">10 ข้อ</option>
+                <option value="20">20 ข้อ</option>
+                <option value="30">30 ข้อ</option>
+                <option value="40">40 ข้อ</option>
+                <option value="50">50 ข้อ</option>
             </select>
+        </div>
 
-            <button type="submit">Register</button>
-        </form>
+        <!-- ปุ่มเริ่ม -->
+        <button id="startBtn">เริ่มฝึก</button>
 
-        <div id="result">
-            <h2>Registration Successful!</h2>
-            <p id="resultDetails"></p>
+        <!-- ผลลัพธ์ที่แสดง -->
+        <div id="quizResults" class="hidden">
+            <h3>ผลการฝึก</h3>
+            <p id="resultsText">กำลังโหลดคำถาม...</p>
         </div>
     </div>
 
-    <!-- เชื่อมโยงไฟล์ JavaScript -->
     <script src="script.js"></script>
-
 </body>
 </html>
