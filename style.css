@@ -1,46 +1,68 @@
 body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #c3e6ff, #f6d6ff);
-    color: #333;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  background: #eef2f7;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 .container {
-    background: #ffffff;
-    padding: 25px;
-    border-radius: 12px;
-    width: 450px;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-    text-align: center;
-    border: 2px solid #2b78e4;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  width: 95%;
+  max-width: 480px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-align: center;
 }
-h1 { color: #2b78e4; margin: 0 0 12px 0; }
-label { display:block; text-align:left; margin-top:12px; color:#555; }
+h1 {
+  color: #2b78e4;
+  margin-bottom: 10px;
+}
 select, button {
-    width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; background: #f0f0f0;
+  width: 100%;
+  padding: 14px;
+  margin: 8px 0;
+  font-size: 18px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: #f8f8f8;
 }
-button { background: #2b78e4; color: white; cursor: pointer; font-weight: bold; border: none; }
-button:hover { background: #1f5bbf; }
-#game-area { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.card { background: #fff5f0; padding: 14px; border-radius: 8px; cursor: pointer; border: 2px solid #f0a050; text-align: center; transition: transform 0.15s, box-shadow 0.15s; }
-.card:hover { transform: translateY(-4px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
-.card.selected { background: #ffe4b3; border-color: #f7b500; }
-.matched { background: #d4f4d1; border-color: #58b54a; pointer-events: none; }
-#timeLeft { margin-top: 10px; color:#555; font-weight: bold; }
+button {
+  background: #2b78e4;
+  color: white;
+  font-weight: bold;
+}
+button:hover {
+  background: #1f5bbf;
+}
+#game-area {
+  margin-top: 15px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.card {
+  background: #f0f4fa;
+  padding: 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  border: 2px solid #c5d3e6;
+  user-select: none;
+  text-align: center;
+}
+.card.selected { background: #cfe2ff; border-color: #6fa3ff; }
+.card.matched { background: #d4f4d1; border-color: #58b54a; pointer-events: none; }
+#timeLeft { margin-top: 10px; font-size: 18px; color: #555; }
 #result-box {
-    margin-top: 18px;
-    padding: 14px;
-    background: linear-gradient(135deg, #ffe0e0, #ffd6ff);
-    border-radius: 8px;
-    border: 2px solid #ff6f61;
-    display:none;
-    text-align:center;
-    font-size: 18px;
-    font-weight:bold;
-    color:#2b78e4;
+  margin-top: 15px;
+  padding: 15px;
+  background: #f7f9fc;
+  border-radius: 8px;
+  border: 1px solid #d6d6d6;
+  display:none;
+  font-size: 18px;
 }
-#controls { display:flex; gap:12px; } #controls button { flex:1; }
