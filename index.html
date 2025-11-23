@@ -9,7 +9,30 @@
 <body>
 <div class="container">
     <h1>English Match Game</h1>
+<button class="start-game-button" onclick="startGame()">⭐ เริ่มเกมจับคู่ ⭐</button>
 
+<!-- ส่วนของเกม (ซ่อนไว้ก่อน) -->
+<div id="game-container" class="game-container">
+    <div id="game-board" class="game-board">
+        <!-- การ์ดจะถูกสร้างด้วย JavaScript -->
+    </div>
+    <div class="game-stats">
+        <span id="moves-counter">Moves: 0</span>
+        <span id="timer">Time: 0s</span>
+    </div>
+    <button class="close-game-button" onclick="closeGame()">ปิดเกม</button>
+</div>
+
+<!-- Modal แสดงผลเมื่อจบเกม -->
+<div id="win-modal" class="modal">
+    <div class="modal-content">
+        <h2>ยอดเยี่ยมมาก!</h2>
+        <p>คุณจับคู่ได้ครบทุกคู่แล้ว!</p>
+        <p id="final-stats"></p>
+        <button onclick="closeModal(); startGame()">เล่นอีกครั้ง</button>
+        <button onclick="closeModal(); closeGame()">กลับหน้าหลัก</button>
+    </div>
+</div>
     <label for="timerSelect">⏱ Select Total Game Time</label>
     <select id="timerSelect">
         <option value="120">2 minutes</option>
