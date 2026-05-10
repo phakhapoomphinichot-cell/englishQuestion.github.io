@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>English Match Game 🎯</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+:root {
+  --bg:#0a0a1a;--surface:#13132a;--card-bg:#1c1c3a;--card-hover:#242450;
+  --a1:#6bcb77;--a1d:#6bcb7730;--a2:#4d96ff;--a2d:#4d96ff30;
+  --b1:#ffd93d;--b1d:#ffd93d30;--b2:#ff6b6b;--b2d:#ff6b6b30;
+  --text:#f0eeff;--subtext:#8886aa;--border:#ffffff12;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{background:var(--bg);background-image:radial-gradient(ellipse at 15% 15%,#1e106040 0%,transparent 50%),radial-gradient(ellipse at 85% 85%,#0a1e6040 0%,transparent 50%);font-family:'Nunito',sans-serif;color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:16px 12px 40px;}
+.screen{width:100%;max-width:460px;display:none;flex-direction:column;gap:14px;}
+.screen.active{display:flex;}
+.game-title{font-family:'Fredoka One',cursive;font-size:2.2rem;background:linear-gradient(135deg,#6bcb77,#4d96ff,#ffd93d,#ff6b6b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;letter-spacing:1px;}
+.game-sub{font-size:.78rem;color:var(--subtext);text-align:center;margin-bottom:4px;}
+.section{background:var(--surface);border-radius:18px;padding:16px;border:1px solid var(--border);}
+.section-title{font-family:'Fredoka One',cursive;font-size:1rem;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+/* LOGIN */
+.login-box{background:var(--surface);border-radius:20px;padding:28px 20px;border:1px solid var(--border);display:flex;flex-direction:column;gap:14px;align-items:center;}
+.login-icon{font-size:3rem;}.login-title{font-family:'Fredoka One',cursive;font-size:1.8rem;}.login-sub{font-size:.85rem;color:var(--subtext);text-align:center;}
+.input-wrap{width:100%;}
+.input-wrap input{width:100%;background:var(--card-bg);border:2px solid var(--border);border-radius:14px;padding:14px 16px;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;color:var(--text);outline:none;transition:border-color .2s;}
+.input-wrap input:focus{border-color:#4d96ff60;}
+.input-wrap input::placeholder{color:var(--subtext);font-weight:400;}
+.player-list{width:100%;display:flex;flex-direction:column;gap:6px;max-height:180px;overflow-y:auto;}
+.player-list-title{font-size:.72rem;color:var(--subtext);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;}
+.player-item{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:10px 14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:all .15s;}
+.player-item:hover{border-color:#4d96ff50;background:var(--card-hover);}
+.player-item .p-name{font-weight:700;font-size:.9rem;}.player-item .p-score{font-family:'Fredoka One',cursive;font-size:.9rem;color:var(--b1);}
+/* LEVEL */
+.level-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.level-card{border-radius:16px;padding:16px 12px;border:2px solid transparent;cursor:pointer;transition:all .2s;text-align:center;}
+.level-card.a1{border-color:var(--a1);background:var(--a1d);}.level-card.a2{border-color:var(--a2);background:var(--a2d);}
+.level-card.b1{border-color:var(--b1);background:var(--b1d);}.level-card.b2{border-color:var(--b2);background:var(--b2d);}
+.level-card:hover{transform:scale(1.04);}.level-card:active{transform:scale(.97);}
+.level-badge{font-family:'Fredoka One',cursive;font-size:1.6rem;display:block;margin-bottom:4px;}
+.level-card.a1 .level-badge{color:var(--a1);}.level-card.a2 .level-badge{color:var(--a2);}
+.level-card.b1 .level-badge{color:var(--b1);}.level-card.b2 .level-badge{color:var(--b2);}
+.level-name{font-weight:800;font-size:.8rem;margin-bottom:2px;}.level-desc{font-size:.7rem;color:var(--subtext);}.level-lives{font-size:.68rem;margin-top:4px;}
+/* PILLS */
+.pill-row{display:flex;gap:8px;flex-wrap:wrap;}
+.pill{background:var(--card-bg);border:2px solid var(--border);border-radius:50px;padding:8px 16px;font-family:'Nunito',sans-serif;font-weight:700;font-size:.82rem;color:var(--subtext);cursor:pointer;transition:all .18s;}
+.pill:hover{color:var(--text);border-color:#ffffff30;}.pill.active{border-color:#4d96ff;color:#4d96ff;background:#4d96ff18;}
+/* BTN */
+.btn-start{background:linear-gradient(135deg,#4d96ff,#6bcb77);border:none;border-radius:16px;padding:16px;width:100%;font-family:'Fredoka One',cursive;font-size:1.3rem;color:#fff;cursor:pointer;transition:all .2s;box-shadow:0 4px 24px #4d96ff40;letter-spacing:1px;}
+.btn-start:hover{transform:scale(1.02);}.btn-start:active{transform:scale(.97);}.btn-start:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+/* TABS */
+.tab-row{display:flex;gap:8px;}
+.tab{flex:1;background:var(--card-bg);border:2px solid var(--border);border-radius:12px;padding:10px;font-family:'Nunito',sans-serif;font-weight:700;font-size:.8rem;color:var(--subtext);cursor:pointer;transition:all .18s;text-align:center;}
+.tab.active{border-color:#4d96ff;color:#4d96ff;background:#4d96ff15;}
+/* HUD */
+.hud{display:flex;justify-content:space-between;align-items:center;background:var(--surface);border-radius:16px;padding:12px 16px;border:1px solid var(--border);}
+.hud-item{display:flex;flex-direction:column;align-items:center;gap:1px;}
+.hud-label{font-size:.6rem;color:var(--subtext);text-transform:uppercase;letter-spacing:1px;}
+.hud-value{font-family:'Fredoka One',cursive;font-size:1.4rem;}
+.progress-wrap{background:var(--surface);border-radius:10px;height:8px;overflow:hidden;border:1px solid var(--border);}
+#progress-bar{height:100%;background:linear-gradient(90deg,#4d96ff,#6bcb77);transition:width .4s;border-radius:10px;}
+.batch-info{text-align:center;font-size:.72rem;color:var(--subtext);}
+/* CARDS */
+#game-area{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.card{background:var(--card-bg);border:2px solid var(--border);border-radius:14px;padding:14px 8px;text-align:center;font-weight:700;font-size:.92rem;cursor:pointer;transition:all .16s;min-height:54px;display:flex;align-items:center;justify-content:center;line-height:1.3;user-select:none;}
+.card:active{transform:scale(.95);}
+.card.selected{border-color:#ffd93d;background:#ffd93d18;color:#ffd93d;transform:scale(1.04);box-shadow:0 0 18px #ffd93d40;}
+.card.matched{border-color:#6bcb77;background:#6bcb7720;color:#6bcb77;cursor:default;animation:matchPop .3s ease;}
+.card.wrong{border-color:#ff6b6b;background:#ff6b6b20;animation:shake .4s ease;}
+@keyframes matchPop{0%{transform:scale(1)}50%{transform:scale(1.1)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+/* RESULT */
+.result-box{background:var(--surface);border-radius:20px;padding:28px 20px;border:1px solid var(--border);text-align:center;}
+.result-emoji{font-size:3.5rem;margin-bottom:8px;}.result-title{font-family:'Fredoka One',cursive;font-size:2rem;margin-bottom:6px;}
+.result-title.win{color:#6bcb77;}.result-title.lose{color:#ff6b6b;}
+.result-sub{font-size:.85rem;color:var(--subtext);margin-bottom:16px;}
+.result-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.stat-box{background:var(--card-bg);border-radius:12px;padding:12px;}
+.stat-label{font-size:.68rem;color:var(--subtext);text-transform:uppercase;letter-spacing:1px;}
+.stat-value{font-family:'Fredoka One',cursive;font-size:1.5rem;margin-top:2px;}
+/* LB */
+.lb-row{display:flex;align-items:center;gap:10px;background:var(--card-bg);border-radius:12px;padding:10px 14px;border:1px solid var(--border);}
+.lb-rank{font-family:'Fredoka One',cursive;font-size:1.1rem;width:28px;text-align:center;}
+.lb-name{flex:1;font-weight:700;font-size:.9rem;}.lb-level{font-size:.7rem;color:var(--subtext);}
+.lb-score{font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--b1);}
+.lb-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
+.lb-tag{background:var(--card-bg);border:1px solid var(--border);border-radius:50px;padding:5px 12px;font-size:.72rem;font-weight:700;color:var(--subtext);cursor:pointer;transition:all .15s;}
+.lb-tag.active{border-color:#ffd93d;color:#ffd93d;background:#ffd93d15;}
+.no-data{text-align:center;color:var(--subtext);font-size:.85rem;padding:20px;}
+/* BTN ROW */
+.btn-row{display:flex;gap:10px;}
+.btn-sec{flex:1;background:var(--surface);border:2px solid var(--border);border-radius:14px;padding:13px;font-family:'Fredoka One',cursive;font-size:1rem;color:var(--text);cursor:pointer;transition:all .2s;}
+.btn-pri{flex:1;background:linear-gradient(135deg,#ff6b6b,#ffd93d);border:none;border-radius:14px;padding:13px;font-family:'Fredoka One',cursive;font-size:1rem;color:#0a0a1a;cursor:pointer;transition:all .2s;}
+.btn-sec:hover,.btn-pri:hover{transform:scale(1.03);}
+/* POPUP */
+.score-popup{position:fixed;pointer-events:none;font-family:'Fredoka One',cursive;font-size:1.4rem;color:#ffd93d;text-shadow:0 2px 10px #ffd93d80;animation:floatUp .9s ease forwards;z-index:999;}
+@keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-70px) scale(1.3)}}
+/* PLAYER BADGE */
+.player-badge{display:flex;align-items:center;gap:8px;background:var(--card-bg);border-radius:50px;padding:8px 14px;border:1px solid var(--border);font-weight:700;font-size:.85rem;cursor:pointer;}
+.player-badge .avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#4d96ff,#6bcb77);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;color:#0a0a1a;}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:#ffffff20;border-radius:4px;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen" class="screen active">
+  <h1 class="game-title">🎯 English Match</h1>
+  <p class="game-sub">จับคู่คำศัพท์ภาษาอังกฤษ</p>
+  <div class="login-box">
+    <div class="login-icon">👤</div>
+    <div class="login-title">ลงชื่อเข้าใช้</div>
+    <div class="login-sub">ใส่ชื่อเล่นเพื่อบันทึกคะแนนและติดอันดับ</div>
+    <div class="input-wrap">
+      <input type="text" id="name-input" placeholder="ชื่อเล่นของคุณ..." maxlength="16" autocomplete="off">
+    </div>
+    <div id="player-history" style="width:100%;display:none;">
+      <p class="player-list-title">👥 ผู้เล่นก่อนหน้า (แตะเพื่อเลือก)</p>
+      <div class="player-list" id="prev-players"></div>
+    </div>
+    <button class="btn-start" id="login-btn" onclick="doLogin()" disabled>เข้าสู่เกม 🚀</button>
+  </div>
+</div>
+
+<!-- SETUP -->
+<div id="setup-screen" class="screen">
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+    <h1 class="game-title" style="font-size:1.6rem;">🎯 English Match</h1>
+    <div class="player-badge" id="player-badge">
+      <div class="avatar" id="badge-avatar">A</div>
+      <span id="badge-name">Player</span>
+    </div>
+  </div>
+
+  <div class="tab-row">
+    <div class="tab active" onclick="switchTab(this,'play-tab')">🎮 เล่นเกม</div>
+    <div class="tab" onclick="switchTab(this,'lb-tab')">🏆 อันดับ</div>
+  </div>
+
+  <div id="play-tab">
+    <div class="section" style="margin-bottom:14px;">
+      <div class="section-title">📊 ระดับภาษา CEFR</div>
+      <div class="level-grid">
+        <div class="level-card a1" onclick="selectLevel('A1',this)">
+          <span class="level-badge">A1</span>
+          <div class="level-name">Beginner</div>
+          <div class="level-desc">คำพื้นฐานมาก</div>
+          <div class="level-lives">❤️❤️❤️❤️❤️ 5 ชีวิต</div>
+        </div>
+        <div class="level-card a2" onclick="selectLevel('A2',this)">
+          <span class="level-badge">A2</span>
+          <div class="level-name">Elementary</div>
+          <div class="level-desc">คำใช้บ่อยทั่วไป</div>
+          <div class="level-lives">❤️❤️❤️❤️ 4 ชีวิต</div>
+        </div>
+        <div class="level-card b1" onclick="selectLevel('B1',this)">
+          <span class="level-badge">B1</span>
+          <div class="level-name">Intermediate</div>
+          <div class="level-desc">คำระดับกลาง</div>
+          <div class="level-lives">❤️❤️❤️ 3 ชีวิต</div>
+        </div>
+        <div class="level-card b2" onclick="selectLevel('B2',this)">
+          <span class="level-badge">B2</span>
+          <div class="level-name">Upper-Inter</div>
+          <div class="level-desc">คำยากขึ้น</div>
+          <div class="level-lives">❤️❤️ 2 ชีวิต</div>
+        </div>
+      </div>
+    </div>
+    <div class="section" style="margin-bottom:14px;">
+      <div class="section-title">🃏 จำนวนคู่/รอบ</div>
+      <div class="pill-row">
+        <div class="pill" data-pairs="4" onclick="selectPill(this,'pairs')">4 คู่</div>
+        <div class="pill active" data-pairs="6" onclick="selectPill(this,'pairs')">6 คู่</div>
+        <div class="pill" data-pairs="8" onclick="selectPill(this,'pairs')">8 คู่</div>
+      </div>
+    </div>
+    <div class="section" style="margin-bottom:14px;">
+      <div class="section-title">⏱️ เวลา</div>
+      <div class="pill-row">
+        <div class="pill" data-time="120" onclick="selectPill(this,'time')">2 นาที</div>
+        <div class="pill" data-time="180" onclick="selectPill(this,'time')">3 นาที</div>
+        <div class="pill active" data-time="300" onclick="selectPill(this,'time')">5 นาที</div>
+        <div class="pill" data-time="600" onclick="selectPill(this,'time')">10 นาที</div>
+      </div>
+    </div>
+    <button class="btn-start" id="main-start-btn" onclick="startGame()" disabled>เลือกระดับก่อนนะ 👆</button>
+  </div>
+
+  <div id="lb-tab" style="display:none;">
+    <div class="section">
+      <div class="section-title">🏆 ตารางอันดับ</div>
+      <div class="lb-filter" id="lb-filter">
+        <div class="lb-tag active" data-lv="ALL" onclick="filterLB(this)">ทุกระดับ</div>
+        <div class="lb-tag" data-lv="A1" onclick="filterLB(this)">A1</div>
+        <div class="lb-tag" data-lv="A2" onclick="filterLB(this)">A2</div>
+        <div class="lb-tag" data-lv="B1" onclick="filterLB(this)">B1</div>
+        <div class="lb-tag" data-lv="B2" onclick="filterLB(this)">B2</div>
+      </div>
+      <div id="lb-list" style="display:flex;flex-direction:column;gap:8px;max-height:360px;overflow-y:auto;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- GAME -->
+<div id="game-screen" class="screen">
+  <div class="hud">
+    <div class="hud-item"><span class="hud-label">คะแนน</span><span class="hud-value" id="score-display" style="color:#ffd93d">0</span></div>
+    <div class="hud-item"><span class="hud-label">เวลา</span><span class="hud-value" id="timer-display" style="color:#4d96ff">5:00</span></div>
+    <div class="hud-item"><span class="hud-label">ชีวิต</span><span class="hud-value" id="lives-display" style="font-size:1rem">❤️❤️❤️</span></div>
+  </div>
+  <div class="progress-wrap"><div id="progress-bar" style="width:0%"></div></div>
+  <p class="batch-info" id="batch-info">รอบที่ 1</p>
+  <div id="game-area"></div>
+</div>
+
+<!-- RESULT -->
+<div id="result-screen" class="screen">
+  <div class="result-box">
+    <div class="result-emoji" id="result-emoji">🏆</div>
+    <div class="result-title win" id="result-title">ชนะแล้ว!</div>
+    <div class="result-sub" id="result-sub">เก่งมากเลย!</div>
+    <div class="result-stats">
+      <div class="stat-box"><div class="stat-label">คะแนน</div><div class="stat-value" style="color:#ffd93d" id="final-score">0</div></div>
+      <div class="stat-box"><div class="stat-label">คู่ที่จับได้</div><div class="stat-value" style="color:#6bcb77" id="final-pairs">0</div></div>
+      <div class="stat-box"><div class="stat-label">ชีวิตที่เหลือ</div><div class="stat-value" style="color:#ff6b6b" id="final-lives">0</div></div>
+      <div class="stat-box"><div class="stat-label">เวลาที่ใช้</div><div class="stat-value" style="color:#4d96ff" id="final-time">0s</div></div>
+    </div>
+    <div style="margin-top:14px;padding:10px 14px;background:var(--card-bg);border-radius:12px;font-size:.82rem;color:var(--subtext);" id="result-rank-info"></div>
+  </div>
+  <div class="btn-row">
+    <button class="btn-sec" onclick="showScreen('setup-screen')">🏠 หน้าหลัก</button>
+    <button class="btn-pri" onclick="restartGame()">🔄 เล่นอีก</button>
+  </div>
+</div>
+
+<script>
+// ===================== WORD BANK =====================
+const wordBank = {
+  A1:[
+    {w:"cat",m:"แมว"},{w:"dog",m:"สุนัข"},{w:"bird",m:"นก"},{w:"fish",m:"ปลา"},{w:"house",m:"บ้าน"},
+    {w:"car",m:"รถ"},{w:"book",m:"หนังสือ"},{w:"water",m:"น้ำ"},{w:"food",m:"อาหาร"},{w:"milk",m:"นม"},
+    {w:"sun",m:"ดวงอาทิตย์"},{w:"moon",m:"ดวงจันทร์"},{w:"tree",m:"ต้นไม้"},{w:"flower",m:"ดอกไม้"},{w:"sky",m:"ท้องฟ้า"},
+    {w:"red",m:"แดง"},{w:"blue",m:"น้ำเงิน"},{w:"green",m:"เขียว"},{w:"white",m:"ขาว"},{w:"black",m:"ดำ"},
+    {w:"one",m:"หนึ่ง"},{w:"two",m:"สอง"},{w:"three",m:"สาม"},{w:"four",m:"สี่"},{w:"five",m:"ห้า"},
+    {w:"apple",m:"แอปเปิ้ล"},{w:"bread",m:"ขนมปัง"},{w:"egg",m:"ไข่"},{w:"rice",m:"ข้าว"},{w:"sugar",m:"น้ำตาล"},
+    {w:"eye",m:"ตา"},{w:"ear",m:"หู"},{w:"nose",m:"จมูก"},{w:"mouth",m:"ปาก"},{w:"hand",m:"มือ"},
+    {w:"foot",m:"เท้า"},{w:"head",m:"หัว"},{w:"hair",m:"ผม"},{w:"arm",m:"แขน"},{w:"leg",m:"ขา"},
+    {w:"mother",m:"แม่"},{w:"father",m:"พ่อ"},{w:"boy",m:"เด็กผู้ชาย"},{w:"girl",m:"เด็กผู้หญิง"},{w:"baby",m:"ทารก"},
+    {w:"school",m:"โรงเรียน"},{w:"teacher",m:"ครู"},{w:"pen",m:"ปากกา"},{w:"bag",m:"กระเป๋า"},{w:"table",m:"โต๊ะ"},
+    {w:"chair",m:"เก้าอี้"},{w:"door",m:"ประตู"},{w:"window",m:"หน้าต่าง"},{w:"bed",m:"เตียง"},{w:"lamp",m:"โคมไฟ"},
+    {w:"hot",m:"ร้อน"},{w:"cold",m:"เย็น"},{w:"big",m:"ใหญ่"},{w:"small",m:"เล็ก"},{w:"good",m:"ดี"},
+    {w:"bad",m:"แย่"},{w:"happy",m:"มีความสุข"},{w:"sad",m:"เศร้า"},{w:"fast",m:"เร็ว"},{w:"slow",m:"ช้า"},
+    {w:"go",m:"ไป"},{w:"come",m:"มา"},{w:"eat",m:"กิน"},{w:"drink",m:"ดื่ม"},{w:"sleep",m:"นอนหลับ"},
+    {w:"run",m:"วิ่ง"},{w:"walk",m:"เดิน"},{w:"sit",m:"นั่ง"},{w:"stand",m:"ยืน"},{w:"play",m:"เล่น"},
+    {w:"rain",m:"ฝน"},{w:"wind",m:"ลม"},{w:"fire",m:"ไฟ"},{w:"cloud",m:"เมฆ"},{w:"snow",m:"หิมะ"},
+    {w:"hat",m:"หมวก"},{w:"shoe",m:"รองเท้า"},{w:"shirt",m:"เสื้อ"},{w:"pants",m:"กางเกง"},{w:"dress",m:"ชุดกระโปรง"},
+    {w:"phone",m:"โทรศัพท์"},{w:"ball",m:"ลูกบอล"},{w:"boat",m:"เรือ"},{w:"plane",m:"เครื่องบิน"},{w:"bus",m:"รถบัส"},
+    {w:"banana",m:"กล้วย"},{w:"orange",m:"ส้ม"},{w:"mango",m:"มะม่วง"},{w:"grape",m:"องุ่น"},{w:"cake",m:"เค้ก"},
+    {w:"horse",m:"ม้า"},{w:"cow",m:"วัว"},{w:"pig",m:"หมู"},{w:"duck",m:"เป็ด"},{w:"rabbit",m:"กระต่าย"},
+  ],
+  A2:[
+    {w:"airport",m:"สนามบิน"},{w:"station",m:"สถานี"},{w:"market",m:"ตลาด"},{w:"hospital",m:"โรงพยาบาล"},{w:"library",m:"ห้องสมุด"},
+    {w:"kitchen",m:"ห้องครัว"},{w:"bedroom",m:"ห้องนอน"},{w:"bathroom",m:"ห้องน้ำ"},{w:"garden",m:"สวน"},{w:"office",m:"สำนักงาน"},
+    {w:"weather",m:"สภาพอากาศ"},{w:"season",m:"ฤดูกาล"},{w:"summer",m:"ฤดูร้อน"},{w:"winter",m:"ฤดูหนาว"},{w:"spring",m:"ฤดูใบไม้ผลิ"},
+    {w:"morning",m:"ตอนเช้า"},{w:"evening",m:"ตอนเย็น"},{w:"midnight",m:"เที่ยงคืน"},{w:"today",m:"วันนี้"},{w:"tomorrow",m:"พรุ่งนี้"},
+    {w:"hungry",m:"หิวข้าว"},{w:"thirsty",m:"กระหายน้ำ"},{w:"tired",m:"เหนื่อย"},{w:"angry",m:"โกรธ"},{w:"afraid",m:"กลัว"},
+    {w:"pretty",m:"สวย"},{w:"ugly",m:"น่าเกลียด"},{w:"clean",m:"สะอาด"},{w:"dirty",m:"สกปรก"},{w:"loud",m:"เสียงดัง"},
+    {w:"quiet",m:"เงียบ"},{w:"busy",m:"ยุ่ง"},{w:"free",m:"ว่าง"},{w:"early",m:"แต่เนิ่น"},{w:"late",m:"สาย"},
+    {w:"buy",m:"ซื้อ"},{w:"sell",m:"ขาย"},{w:"cook",m:"ทำอาหาร"},{w:"study",m:"เรียน"},{w:"teach",m:"สอน"},
+    {w:"learn",m:"เรียนรู้"},{w:"write",m:"เขียน"},{w:"read",m:"อ่าน"},{w:"listen",m:"ฟัง"},{w:"speak",m:"พูด"},
+    {w:"help",m:"ช่วย"},{w:"open",m:"เปิด"},{w:"close",m:"ปิด"},{w:"start",m:"เริ่ม"},{w:"finish",m:"เสร็จ"},
+    {w:"travel",m:"เดินทาง"},{w:"arrive",m:"มาถึง"},{w:"leave",m:"จากไป"},{w:"wait",m:"รอ"},{w:"friend",m:"เพื่อน"},
+    {w:"family",m:"ครอบครัว"},{w:"neighbor",m:"เพื่อนบ้าน"},{w:"doctor",m:"หมอ"},{w:"nurse",m:"พยาบาล"},{w:"police",m:"ตำรวจ"},
+    {w:"farmer",m:"ชาวนา"},{w:"driver",m:"คนขับ"},{w:"student",m:"นักเรียน"},{w:"worker",m:"คนงาน"},{w:"money",m:"เงิน"},
+    {w:"price",m:"ราคา"},{w:"ticket",m:"ตั๋ว"},{w:"map",m:"แผนที่"},{w:"address",m:"ที่อยู่"},{w:"color",m:"สี"},
+    {w:"size",m:"ขนาด"},{w:"shape",m:"รูปร่าง"},{w:"number",m:"ตัวเลข"},{w:"letter",m:"ตัวอักษร"},{w:"left",m:"ซ้าย"},
+    {w:"right",m:"ขวา"},{w:"straight",m:"ตรงไป"},{w:"near",m:"ใกล้"},{w:"far",m:"ไกล"},{w:"up",m:"ขึ้น"},
+    {w:"down",m:"ลง"},{w:"inside",m:"ข้างใน"},{w:"outside",m:"ข้างนอก"},{w:"between",m:"ระหว่าง"},{w:"always",m:"เสมอ"},
+    {w:"never",m:"ไม่เคย"},{w:"sometimes",m:"บางครั้ง"},{w:"often",m:"บ่อยๆ"},{w:"again",m:"อีกครั้ง"},{w:"also",m:"เช่นกัน"},
+    {w:"only",m:"เท่านั้น"},{w:"both",m:"ทั้งสอง"},{w:"each",m:"แต่ละ"},{w:"every",m:"ทุก"},{w:"sport",m:"กีฬา"},
+    {w:"music",m:"ดนตรี"},{w:"movie",m:"หนัง"},{w:"hobby",m:"งานอดิเรก"},{w:"birthday",m:"วันเกิด"},{w:"holiday",m:"วันหยุด"},
+  ],
+  B1:[
+    {w:"achieve",m:"บรรลุผล"},{w:"advice",m:"คำแนะนำ"},{w:"afford",m:"มีเงินพอ"},{w:"agree",m:"เห็นด้วย"},{w:"allow",m:"อนุญาต"},
+    {w:"amazing",m:"น่าทึ่ง"},{w:"announce",m:"ประกาศ"},{w:"apply",m:"สมัคร"},{w:"appreciate",m:"ชื่นชม"},{w:"argue",m:"โต้เถียง"},
+    {w:"arrange",m:"จัดการ"},{w:"avoid",m:"หลีกเลี่ยง"},{w:"behavior",m:"พฤติกรรม"},{w:"believe",m:"เชื่อ"},{w:"benefit",m:"ประโยชน์"},
+    {w:"borrow",m:"ยืม"},{w:"challenge",m:"ความท้าทาย"},{w:"chance",m:"โอกาส"},{w:"character",m:"บุคลิก"},{w:"choose",m:"เลือก"},
+    {w:"compare",m:"เปรียบเทียบ"},{w:"compete",m:"แข่งขัน"},{w:"complain",m:"ร้องเรียน"},{w:"complete",m:"สมบูรณ์"},{w:"consider",m:"พิจารณา"},
+    {w:"continue",m:"ต่อเนื่อง"},{w:"control",m:"ควบคุม"},{w:"culture",m:"วัฒนธรรม"},{w:"curious",m:"อยากรู้"},{w:"decide",m:"ตัดสินใจ"},
+    {w:"describe",m:"อธิบาย"},{w:"develop",m:"พัฒนา"},{w:"difference",m:"ความแตกต่าง"},{w:"difficult",m:"ยาก"},{w:"discuss",m:"พูดคุย"},
+    {w:"discover",m:"ค้นพบ"},{w:"dream",m:"ฝัน"},{w:"earn",m:"หาเงิน"},{w:"effort",m:"ความพยายาม"},{w:"encourage",m:"ให้กำลังใจ"},
+    {w:"enjoy",m:"สนุกเพลิดเพลิน"},{w:"environment",m:"สิ่งแวดล้อม"},{w:"escape",m:"หนีออกไป"},{w:"event",m:"เหตุการณ์"},{w:"experience",m:"ประสบการณ์"},
+    {w:"explain",m:"อธิบาย"},{w:"fail",m:"ล้มเหลว"},{w:"famous",m:"มีชื่อเสียง"},{w:"feeling",m:"ความรู้สึก"},{w:"follow",m:"ติดตาม"},
+    {w:"forgive",m:"ให้อภัย"},{w:"freedom",m:"อิสรภาพ"},{w:"friendship",m:"มิตรภาพ"},{w:"future",m:"อนาคต"},{w:"goal",m:"เป้าหมาย"},
+    {w:"government",m:"รัฐบาล"},{w:"grow",m:"เติบโต"},{w:"guess",m:"เดา"},{w:"habit",m:"นิสัย"},{w:"honest",m:"ซื่อสัตย์"},
+    {w:"humor",m:"อารมณ์ขัน"},{w:"imagine",m:"จินตนาการ"},{w:"improve",m:"ปรับปรุง"},{w:"include",m:"รวมถึง"},{w:"increase",m:"เพิ่มขึ้น"},
+    {w:"industry",m:"อุตสาหกรรม"},{w:"influence",m:"อิทธิพล"},{w:"instead",m:"แทนที่"},{w:"interest",m:"ความสนใจ"},{w:"join",m:"เข้าร่วม"},
+    {w:"journey",m:"การเดินทาง"},{w:"knowledge",m:"ความรู้"},{w:"manage",m:"จัดการ"},{w:"memory",m:"ความทรงจำ"},{w:"mention",m:"กล่าวถึง"},
+    {w:"mistake",m:"ความผิดพลาด"},{w:"natural",m:"ธรรมชาติ"},{w:"necessary",m:"จำเป็น"},{w:"nervous",m:"กังวล"},{w:"offer",m:"เสนอ"},
+    {w:"opinion",m:"ความคิดเห็น"},{w:"opportunity",m:"โอกาสงาม"},{w:"organize",m:"จัดระเบียบ"},{w:"passion",m:"ความหลงใหล"},{w:"patient",m:"อดทน"},
+    {w:"popular",m:"เป็นที่นิยม"},{w:"prepare",m:"เตรียม"},{w:"prevent",m:"ป้องกัน"},{w:"purpose",m:"จุดประสงค์"},{w:"realize",m:"ตระหนักรู้"},
+    {w:"receive",m:"ได้รับ"},{w:"recognize",m:"จำได้"},{w:"reduce",m:"ลดลง"},{w:"relationship",m:"ความสัมพันธ์"},{w:"remind",m:"เตือน"},
+  ],
+  B2:[
+    {w:"abstract",m:"นามธรรม"},{w:"accomplish",m:"บรรลุผล"},{w:"accurate",m:"แม่นยำ"},{w:"acknowledge",m:"ยอมรับ"},{w:"adequate",m:"เพียงพอ"},
+    {w:"ambiguous",m:"คลุมเครือ"},{w:"ambitious",m:"ทะเยอทะยาน"},{w:"analyze",m:"วิเคราะห์"},{w:"anticipate",m:"คาดการณ์"},{w:"apparent",m:"ชัดเจน"},
+    {w:"appropriate",m:"เหมาะสม"},{w:"assumption",m:"การสันนิษฐาน"},{w:"attitude",m:"ทัศนคติ"},{w:"authority",m:"อำนาจ"},{w:"capable",m:"มีความสามารถ"},
+    {w:"circumstance",m:"สถานการณ์"},{w:"coherent",m:"สอดคล้องกัน"},{w:"commitment",m:"ความมุ่งมั่น"},{w:"complex",m:"ซับซ้อน"},{w:"concept",m:"แนวคิด"},
+    {w:"concern",m:"ความกังวล"},{w:"confident",m:"มั่นใจ"},{w:"conflict",m:"ความขัดแย้ง"},{w:"consequence",m:"ผลที่ตามมา"},{w:"consistent",m:"สม่ำเสมอ"},
+    {w:"contrary",m:"ตรงกันข้าม"},{w:"contribute",m:"มีส่วนร่วม"},{w:"controversial",m:"เป็นที่ถกเถียง"},{w:"convince",m:"โน้มน้าว"},{w:"creativity",m:"ความคิดสร้างสรรค์"},
+    {w:"criterion",m:"เกณฑ์"},{w:"crucial",m:"สำคัญมาก"},{w:"dedicate",m:"อุทิศ"},{w:"deliberate",m:"จงใจ"},{w:"demonstrate",m:"แสดงให้เห็น"},
+    {w:"diverse",m:"หลากหลาย"},{w:"dominant",m:"มีอิทธิพล"},{w:"elaborate",m:"ละเอียด"},{w:"eliminate",m:"กำจัด"},{w:"emerge",m:"ปรากฏขึ้น"},
+    {w:"emphasis",m:"การเน้นย้ำ"},{w:"enhance",m:"เพิ่มพูน"},{w:"evaluate",m:"ประเมิน"},{w:"evident",m:"ชัดเจน"},{w:"exceed",m:"เกินกว่า"},
+    {w:"flexible",m:"ยืดหยุ่น"},{w:"fundamental",m:"พื้นฐาน"},{w:"generate",m:"สร้างขึ้น"},{w:"genuine",m:"แท้จริง"},{w:"global",m:"ทั่วโลก"},
+    {w:"hypothesis",m:"สมมติฐาน"},{w:"identify",m:"ระบุ"},{w:"illustrate",m:"แสดงตัวอย่าง"},{w:"imply",m:"บอกเป็นนัย"},{w:"implement",m:"ดำเนินการ"},
+    {w:"inevitable",m:"หลีกเลี่ยงไม่ได้"},{w:"interpret",m:"ตีความ"},{w:"investigate",m:"สืบสวน"},{w:"justify",m:"แสดงเหตุผล"},{w:"logical",m:"มีเหตุผล"},
+    {w:"maintain",m:"รักษาไว้"},{w:"manipulate",m:"บงการ"},{w:"mechanism",m:"กลไก"},{w:"motive",m:"แรงจูงใจ"},{w:"negotiate",m:"เจรจา"},
+    {w:"objective",m:"วัตถุประสงค์"},{w:"observe",m:"สังเกต"},{w:"obstacle",m:"อุปสรรค"},{w:"perceive",m:"รับรู้"},{w:"perspective",m:"มุมมอง"},
+    {w:"phenomenon",m:"ปรากฏการณ์"},{w:"potential",m:"ศักยภาพ"},{w:"precise",m:"แม่นยำชัดเจน"},{w:"principle",m:"หลักการ"},{w:"priority",m:"สิ่งสำคัญสูงสุด"},
+    {w:"pursue",m:"มุ่งหมาย"},{w:"relevant",m:"เกี่ยวข้อง"},{w:"resolve",m:"แก้ไขปัญหา"},{w:"significant",m:"มีนัยสำคัญ"},{w:"strategy",m:"กลยุทธ์"},
+    {w:"substantial",m:"มากมาย"},{w:"sufficient",m:"เพียงพอ"},{w:"sustainable",m:"ยั่งยืน"},{w:"transform",m:"เปลี่ยนแปลง"},{w:"ultimately",m:"ในที่สุด"},
+  ]
+};
+
+// ===================== STATE =====================
+let currentPlayer = null, selectedLevel = null;
+let selectedPairs = 6, selectedTime = 300;
+const maxLivesMap = {A1:5,A2:4,B1:3,B2:2};
+const scorePerMatch = {A1:10,A2:15,B1:20,B2:30};
+let remainingWords=[], currentBatch=[], selected=[];
+let matched=0, totalMatched=0, score=0, lives=3;
+let timer=null, timeRemaining=0, lockSelection=false;
+let batchNum=0, startTime=0, totalWords=0;
+let lbFilterLevel = 'ALL';
+
+// ===================== STORAGE =====================
+function getPlayers(){try{return JSON.parse(localStorage.getItem('em_players')||'{}')}catch(e){return{}}}
+function savePlayers(p){try{localStorage.setItem('em_players',JSON.stringify(p))}catch(e){}}
+function saveScore(name,level,sc){
+  const players=getPlayers(), key=name.toLowerCase();
+  if(!players[key]) players[key]={name,best:{}};
+  if(!players[key].best[level]||sc>players[key].best[level]) players[key].best[level]=sc;
+  savePlayers(players);
+}
+function getLeaderboard(level){
+  const players=getPlayers(), rows=[];
+  Object.values(players).forEach(p=>{
+    if(level==='ALL'){
+      const total=Object.values(p.best||{}).reduce((a,b)=>a+b,0);
+      if(total>0) rows.push({name:p.name,score:total,level:'ALL'});
+    } else {
+      const best=(p.best||{})[level];
+      if(best) rows.push({name:p.name,score:best,level});
+    }
+  });
+  return rows.sort((a,b)=>b.score-a.score);
+}
+
+// ===================== LOGIN =====================
+document.getElementById('name-input').addEventListener('input',function(){
+  document.getElementById('login-btn').disabled=this.value.trim().length<2;
+});
+document.getElementById('name-input').addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&this.value.trim().length>=2) doLogin();
+});
+
+function initLogin(){
+  const players=getPlayers();
+  const names=Object.values(players).sort((a,b)=>{
+    const aM=Math.max(...(Object.values(a.best||{}).length?Object.values(a.best||{}):[0]));
+    const bM=Math.max(...(Object.values(b.best||{}).length?Object.values(b.best||{}):[0]));
+    return bM-aM;
+  }).slice(0,6);
+  if(names.length>0){
+    document.getElementById('player-history').style.display='block';
+    const list=document.getElementById('prev-players');
+    list.innerHTML='';
+    names.forEach(p=>{
+      const best=Math.max(...(Object.values(p.best||{}).length?Object.values(p.best||{}):[0]));
+      const div=document.createElement('div');
+      div.className='player-item';
+      div.innerHTML=`<span class="p-name">👤 ${p.name}</span><span class="p-score">${best} pts</span>`;
+      div.onclick=()=>{document.getElementById('name-input').value=p.name;document.getElementById('login-btn').disabled=false;doLogin();};
+      list.appendChild(div);
+    });
+  }
+}
+
+function doLogin(){
+  const name=document.getElementById('name-input').value.trim();
+  if(name.length<2) return;
+  currentPlayer=name;
+  document.getElementById('badge-name').textContent=name;
+  document.getElementById('badge-avatar').textContent=name[0].toUpperCase();
+  showScreen('setup-screen');
+  renderLB('ALL');
+}
+
+// ===================== SETUP =====================
+function switchTab(btn,tabId){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('play-tab').style.display=tabId==='play-tab'?'block':'none';
+  document.getElementById('lb-tab').style.display=tabId==='lb-tab'?'block':'none';
+  if(tabId==='lb-tab') renderLB(lbFilterLevel);
+}
+
+function selectLevel(lv,el){
+  document.querySelectorAll('.level-card').forEach(c=>{c.style.opacity='0.5';c.style.transform='scale(0.97)';});
+  el.style.opacity='1';el.style.transform='scale(1.04)';
+  selectedLevel=lv;
+  const btn=document.getElementById('main-start-btn');
+  btn.disabled=false;
+  btn.textContent=`🚀 เริ่มเล่นระดับ ${lv}!`;
+}
+
+function selectPill(el,type){
+  el.closest('.pill-row').querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  if(type==='pairs') selectedPairs=parseInt(el.dataset.pairs);
+  if(type==='time') selectedTime=parseInt(el.dataset.time);
+}
+
+// ===================== GAME =====================
+function shuffleArray(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+function startGame(){
+  if(!selectedLevel) return;
+  remainingWords=shuffleArray([...wordBank[selectedLevel]]);
+  totalWords=remainingWords.length;
+  selected=[];matched=0;totalMatched=0;score=0;
+  lives=maxLivesMap[selectedLevel];timeRemaining=selectedTime;
+  lockSelection=false;batchNum=0;startTime=Date.now();
+  showScreen('game-screen');
+  updateHUD();updateProgress();
+  clearInterval(timer);
+  timer=setInterval(()=>{
+    timeRemaining--;updateHUD();
+    if(timeRemaining<=0) endGame(false,'time');
+  },1000);
+  nextBatch();
+}
+
+function nextBatch(){
+  if(remainingWords.length===0){endGame(true);return;}
+  batchNum++;
+  const size=Math.min(selectedPairs,remainingWords.length);
+  currentBatch=remainingWords.splice(0,size);
+  matched=0;
+  renderCards(currentBatch);
+  document.getElementById('batch-info').textContent=`รอบที่ ${batchNum} • คำที่เหลือ ${remainingWords.length} คำ`;
+}
+
+function renderCards(words){
+  const cards=[];
+  words.forEach(item=>{
+    cards.push({text:item.w,pair:item.m});
+    cards.push({text:item.m,pair:item.w});
+  });
+  shuffleArray(cards);
+  const area=document.getElementById('game-area');
+  area.innerHTML='';
+  cards.forEach((c,idx)=>{
+    const div=document.createElement('div');
+    div.className='card';div.textContent=c.text;
+    div.dataset.pair=c.pair;div.dataset.index=idx;
+    div.addEventListener('click',()=>selectCard(div));
+    area.appendChild(div);
+  });
+}
+
+function selectCard(card){
+  if(lockSelection||card.classList.contains('matched')||card.classList.contains('selected')) return;
+  card.classList.add('selected');selected.push(card);
+  if(selected.length===2){
+    lockSelection=true;
+    const[a,b]=selected;
+    const isMatch=(a.dataset.pair===b.textContent&&b.dataset.pair===a.textContent);
+    if(isMatch){
+      a.classList.remove('selected');a.classList.add('matched');
+      b.classList.remove('selected');b.classList.add('matched');
+      matched++;totalMatched++;
+      const pts=scorePerMatch[selectedLevel];score+=pts;
+      showScorePopup('+'+pts,b);
+      selected=[];lockSelection=false;
+      updateHUD();updateProgress();
+      if(matched===currentBatch.length) setTimeout(nextBatch,600);
+    } else {
+      a.classList.add('wrong');b.classList.add('wrong');lives--;updateHUD();
+      setTimeout(()=>{
+        a.classList.remove('selected','wrong');b.classList.remove('selected','wrong');
+        selected=[];lockSelection=false;
+      },700);
+      if(lives<=0) setTimeout(()=>endGame(false,'lives'),800);
+    }
+  }
+}
+
+function updateHUD(){
+  document.getElementById('score-display').textContent=score;
+  const m=Math.floor(timeRemaining/60),s=timeRemaining%60;
+  const tEl=document.getElementById('timer-display');
+  tEl.textContent=`${m}:${s.toString().padStart(2,'0')}`;
+  tEl.style.color=timeRemaining<=30?'#ff6b6b':'#4d96ff';
+  const maxH=maxLivesMap[selectedLevel];let hearts='';
+  for(let i=0;i<maxH;i++) hearts+=i<lives?'❤️':'🖤';
+  document.getElementById('lives-display').textContent=hearts;
+}
+
+function updateProgress(){
+  document.getElementById('progress-bar').style.width=Math.min(100,Math.round(totalMatched/totalWords*100))+'%';
+}
+
+function showScorePopup(text,card){
+  const el=document.createElement('div');el.className='score-popup';el.textContent=text;
+  const rect=card.getBoundingClientRect();
+  el.style.left=(rect.left+rect.width/2-20)+'px';el.style.top=(rect.top+window.scrollY)+'px';
+  document.body.appendChild(el);setTimeout(()=>el.remove(),950);
+}
+
+function endGame(win,reason){
+  clearInterval(timer);
+  const elapsed=Math.round((Date.now()-startTime)/1000);
+  saveScore(currentPlayer,selectedLevel,score);
+  showScreen('result-screen');
+  document.getElementById('result-emoji').textContent=win?'🏆':reason==='lives'?'💔':'⏰';
+  const rt=document.getElementById('result-title');
+  rt.className='result-title '+(win?'win':'lose');
+  rt.textContent=win?'ชนะแล้ว! 🎉':reason==='lives'?'หมดชีวิต!':'หมดเวลา!';
+  document.getElementById('result-sub').textContent=win?`จับคู่ครบทุกคำ ${selectedLevel} แล้ว! เก่งมาก!`:'ไม่เป็นไร ลองใหม่ได้เลยนะ 💪';
+  document.getElementById('final-score').textContent=score;
+  document.getElementById('final-pairs').textContent=totalMatched;
+  document.getElementById('final-lives').textContent=Math.max(0,lives);
+  document.getElementById('final-time').textContent=elapsed+'s';
+  const lb=getLeaderboard(selectedLevel);
+  const rank=lb.findIndex(r=>r.name.toLowerCase()===currentPlayer.toLowerCase())+1;
+  document.getElementById('result-rank-info').textContent=rank>0?`🏅 อันดับของคุณระดับ ${selectedLevel}: #${rank} จาก ${lb.length} คน`:'';
+}
+
+function restartGame(){startGame();}
+
+// ===================== LEADERBOARD =====================
+function filterLB(el){
+  document.querySelectorAll('.lb-tag').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');lbFilterLevel=el.dataset.lv;renderLB(lbFilterLevel);
+}
+
+function renderLB(level){
+  const rows=getLeaderboard(level);
+  const container=document.getElementById('lb-list');
+  if(!container) return;
+  if(rows.length===0){container.innerHTML='<div class="no-data">ยังไม่มีข้อมูล<br>เล่นแล้วมาติดอันดับกัน! 🎮</div>';return;}
+  const rankEmoji=['🥇','🥈','🥉'];
+  container.innerHTML=rows.slice(0,20).map((r,i)=>{
+    const isMe=r.name.toLowerCase()===(currentPlayer||'').toLowerCase();
+    return `<div class="lb-row" style="${isMe?'border-color:#ffd93d50;background:#ffd93d08;':''}">
+      <div class="lb-rank">${rankEmoji[i]||(i+1)}</div>
+      <div style="flex:1"><div class="lb-name">${isMe?'⭐ ':''}${r.name}</div>
+      <div class="lb-level">${level==='ALL'?'รวมทุกระดับ':'ระดับ '+r.level}</div></div>
+      <div class="lb-score">${r.score.toLocaleString()}</div>
+    </div>`;
+  }).join('');
+}
+
+// ===================== SCREEN =====================
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='setup-screen') renderLB(lbFilterLevel||'ALL');
+}
+
+initLogin();
+</script>
+</body>
+</html>
