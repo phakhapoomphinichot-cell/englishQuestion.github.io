@@ -331,6 +331,11 @@ function renderLB(level){
   }).join('');
 }
 
-// ===================== SCREEN =====================
+// // ===================== SCREEN =====================
 function showScreen(id){
-  document.querySelectorAll('
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='setup-screen') renderLB(lbFilterLevel||'ALL');
+}
+
+initLogin();
