@@ -1,104 +1,230 @@
-body {
-    font-family: 'Poppins', sans-serif;
-    background: #eef2f7;
-    color: #333;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    font-family: sans-serif;
-    line-height: 1.6;
-    padding: 20px;
-    max-width: 800px;
-    margin: 0 auto;
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+:root {
+  --bg:#0a0a1a;--surface:#13132a;--card-bg:#1c1c3a;--card-hover:#242450;
+  --a1:#6bcb77;--a1d:#6bcb7730;--a2:#4d96ff;--a2d:#4d96ff30;
+  --b1:#ffd93d;--b1d:#ffd93d30;--b2:#ff6b6b;--b2d:#ff6b6b30;
+  --text:#f0eeff;--subtext:#8886aa;--border:#ffffff12;
 }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{background:var(--bg);background-image:radial-gradient(ellipse at 15% 15%,#1e106040 0%,transparent 50%),radial-gradient(ellipse at 85% 85%,#0a1e6040 0%,transparent 50%);font-family:'Nunito',sans-serif;color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:16px 12px 40px;}
+.screen{width:100%;max-width:460px;display:none;flex-direction:column;gap:14px;}
+.screen.active{display:flex;}
+.game-title{font-family:'Fredoka One',cursive;font-size:2.2rem;background:linear-gradient(135deg,#6bcb77,#4d96ff,#ffd93d,#ff6b6b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;letter-spacing:1px;}
+.game-sub{font-size:.78rem;color:var(--subtext);text-align:center;margin-bottom:4px;}
+.section{background:var(--surface);border-radius:18px;padding:16px;border:1px solid var(--border);}
+.section-title{font-family:'Fredoka One',cursive;font-size:1rem;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+/* LOGIN */
+.login-box{background:var(--surface);border-radius:20px;padding:28px 20px;border:1px solid var(--border);display:flex;flex-direction:column;gap:14px;align-items:center;}
+.login-icon{font-size:3rem;}.login-title{font-family:'Fredoka One',cursive;font-size:1.8rem;}.login-sub{font-size:.85rem;color:var(--subtext);text-align:center;}
+.input-wrap{width:100%;}
+.input-wrap input{width:100%;background:var(--card-bg);border:2px solid var(--border);border-radius:14px;padding:14px 16px;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;color:var(--text);outline:none;transition:border-color .2s;}
+.input-wrap input:focus{border-color:#4d96ff60;}
+.input-wrap input::placeholder{color:var(--subtext);font-weight:400;}
+.player-list{width:100%;display:flex;flex-direction:column;gap:6px;max-height:180px;overflow-y:auto;}
+.player-list-title{font-size:.72rem;color:var(--subtext);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;}
+.player-item{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:10px 14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:all .15s;}
+.player-item:hover{border-color:#4d96ff50;background:var(--card-hover);}
+.player-item .p-name{font-weight:700;font-size:.9rem;}.player-item .p-score{font-family:'Fredoka One',cursive;font-size:.9rem;color:var(--b1);}
+/* LEVEL */
+.level-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.level-card{border-radius:16px;padding:16px 12px;border:2px solid transparent;cursor:pointer;transition:all .2s;text-align:center;}
+.level-card.a1{border-color:var(--a1);background:var(--a1d);}.level-card.a2{border-color:var(--a2);background:var(--a2d);}
+.level-card.b1{border-color:var(--b1);background:var(--b1d);}.level-card.b2{border-color:var(--b2);background:var(--b2d);}
+.level-card:hover{transform:scale(1.04);}.level-card:active{transform:scale(.97);}
+.level-badge{font-family:'Fredoka One',cursive;font-size:1.6rem;display:block;margin-bottom:4px;}
+.level-card.a1 .level-badge{color:var(--a1);}.level-card.a2 .level-badge{color:var(--a2);}
+.level-card.b1 .level-badge{color:var(--b1);}.level-card.b2 .level-badge{color:var(--b2);}
+.level-name{font-weight:800;font-size:.8rem;margin-bottom:2px;}.level-desc{font-size:.7rem;color:var(--subtext);}.level-lives{font-size:.68rem;margin-top:4px;}
+/* PILLS */
+.pill-row{display:flex;gap:8px;flex-wrap:wrap;}
+.pill{background:var(--card-bg);border:2px solid var(--border);border-radius:50px;padding:8px 16px;font-family:'Nunito',sans-serif;font-weight:700;font-size:.82rem;color:var(--subtext);cursor:pointer;transition:all .18s;}
+.pill:hover{color:var(--text);border-color:#ffffff30;}.pill.active{border-color:#4d96ff;color:#4d96ff;background:#4d96ff18;}
+/* BTN */
+.btn-start{background:linear-gradient(135deg,#4d96ff,#6bcb77);border:none;border-radius:16px;padding:16px;width:100%;font-family:'Fredoka One',cursive;font-size:1.3rem;color:#fff;cursor:pointer;transition:all .2s;box-shadow:0 4px 24px #4d96ff40;letter-spacing:1px;}
+.btn-start:hover{transform:scale(1.02);}.btn-start:active{transform:scale(.97);}.btn-start:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+/* TABS */
+.tab-row{display:flex;gap:8px;}
+.tab{flex:1;background:var(--card-bg);border:2px solid var(--border);border-radius:12px;padding:10px;font-family:'Nunito',sans-serif;font-weight:700;font-size:.8rem;color:var(--subtext);cursor:pointer;transition:all .18s;text-align:center;}
+.tab.active{border-color:#4d96ff;color:#4d96ff;background:#4d96ff15;}
+/* HUD */
+.hud{display:flex;justify-content:space-between;align-items:center;background:var(--surface);border-radius:16px;padding:12px 16px;border:1px solid var(--border);}
+.hud-item{display:flex;flex-direction:column;align-items:center;gap:1px;}
+.hud-label{font-size:.6rem;color:var(--subtext);text-transform:uppercase;letter-spacing:1px;}
+.hud-value{font-family:'Fredoka One',cursive;font-size:1.4rem;}
+.progress-wrap{background:var(--surface);border-radius:10px;height:8px;overflow:hidden;border:1px solid var(--border);}
+#progress-bar{height:100%;background:linear-gradient(90deg,#4d96ff,#6bcb77);transition:width .4s;border-radius:10px;}
+.batch-info{text-align:center;font-size:.72rem;color:var(--subtext);}
+/* CARDS */
+#game-area{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.card{background:var(--card-bg);border:2px solid var(--border);border-radius:14px;padding:14px 8px;text-align:center;font-weight:700;font-size:.92rem;cursor:pointer;transition:all .16s;min-height:54px;display:flex;align-items:center;justify-content:center;line-height:1.3;user-select:none;}
+.card:active{transform:scale(.95);}
+.card.selected{border-color:#ffd93d;background:#ffd93d18;color:#ffd93d;transform:scale(1.04);box-shadow:0 0 18px #ffd93d40;}
+.card.matched{border-color:#6bcb77;background:#6bcb7720;color:#6bcb77;cursor:default;animation:matchPop .3s ease;}
+.card.wrong{border-color:#ff6b6b;background:#ff6b6b20;animation:shake .4s ease;}
+@keyframes matchPop{0%{transform:scale(1)}50%{transform:scale(1.1)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+/* RESULT */
+.result-box{background:var(--surface);border-radius:20px;padding:28px 20px;border:1px solid var(--border);text-align:center;}
+.result-emoji{font-size:3.5rem;margin-bottom:8px;}.result-title{font-family:'Fredoka One',cursive;font-size:2rem;margin-bottom:6px;}
+.result-title.win{color:#6bcb77;}.result-title.lose{color:#ff6b6b;}
+.result-sub{font-size:.85rem;color:var(--subtext);margin-bottom:16px;}
+.result-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.stat-box{background:var(--card-bg);border-radius:12px;padding:12px;}
+.stat-label{font-size:.68rem;color:var(--subtext);text-transform:uppercase;letter-spacing:1px;}
+.stat-value{font-family:'Fredoka One',cursive;font-size:1.5rem;margin-top:2px;}
+/* LB */
+.lb-row{display:flex;align-items:center;gap:10px;background:var(--card-bg);border-radius:12px;padding:10px 14px;border:1px solid var(--border);}
+.lb-rank{font-family:'Fredoka One',cursive;font-size:1.1rem;width:28px;text-align:center;}
+.lb-name{flex:1;font-weight:700;font-size:.9rem;}.lb-level{font-size:.7rem;color:var(--subtext);}
+.lb-score{font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--b1);}
+.lb-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
+.lb-tag{background:var(--card-bg);border:1px solid var(--border);border-radius:50px;padding:5px 12px;font-size:.72rem;font-weight:700;color:var(--subtext);cursor:pointer;transition:all .15s;}
+.lb-tag.active{border-color:#ffd93d;color:#ffd93d;background:#ffd93d15;}
+.no-data{text-align:center;color:var(--subtext);font-size:.85rem;padding:20px;}
+/* BTN ROW */
+.btn-row{display:flex;gap:10px;}
+.btn-sec{flex:1;background:var(--surface);border:2px solid var(--border);border-radius:14px;padding:13px;font-family:'Fredoka One',cursive;font-size:1rem;color:var(--text);cursor:pointer;transition:all .2s;}
+.btn-pri{flex:1;background:linear-gradient(135deg,#ff6b6b,#ffd93d);border:none;border-radius:14px;padding:13px;font-family:'Fredoka One',cursive;font-size:1rem;color:#0a0a1a;cursor:pointer;transition:all .2s;}
+.btn-sec:hover,.btn-pri:hover{transform:scale(1.03);}
+/* POPUP */
+.score-popup{position:fixed;pointer-events:none;font-family:'Fredoka One',cursive;font-size:1.4rem;color:#ffd93d;text-shadow:0 2px 10px #ffd93d80;animation:floatUp .9s ease forwards;z-index:999;}
+@keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-70px) scale(1.3)}}
+/* PLAYER BADGE */
+.player-badge{display:flex;align-items:center;gap:8px;background:var(--card-bg);border-radius:50px;padding:8px 14px;border:1px solid var(--border);font-weight:700;font-size:.85rem;cursor:pointer;}
+.player-badge .avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#4d96ff,#6bcb77);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;color:#0a0a1a;}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:#ffffff20;border-radius:4px;}
+</style>
+</head>
+<body>
 
-.container {
-    background: #ffffff;
-    padding: 20px;
-    border-radius: 12px;
-    width: 420px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    text-align: center;
+<!-- LOGIN -->
+<div id="login-screen" class="screen active">
+  <h1 class="game-title">🎯 English Match</h1>
+  <p class="game-sub">จับคู่คำศัพท์ภาษาอังกฤษ</p>
+  <div class="login-box">
+    <div class="login-icon">👤</div>
+    <div class="login-title">ลงชื่อเข้าใช้</div>
+    <div class="login-sub">ใส่ชื่อเล่นเพื่อบันทึกคะแนนและติดอันดับ</div>
+    <div class="input-wrap">
+      <input type="text" id="name-input" placeholder="ชื่อเล่นของคุณ..." maxlength="16" autocomplete="off">
+    </div>
+    <div id="player-history" style="width:100%;display:none;">
+      <p class="player-list-title">👥 ผู้เล่นก่อนหน้า (แตะเพื่อเลือก)</p>
+      <div class="player-list" id="prev-players"></div>
+    </div>
+    <button class="btn-start" id="login-btn" onclick="doLogin()" disabled>เข้าสู่เกม 🚀</button>
+  </div>
+</div>
 
-button, input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    box-sizing: border-box;
-}
+<!-- SETUP -->
+<div id="setup-screen" class="screen">
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+    <h1 class="game-title" style="font-size:1.6rem;">🎯 English Match</h1>
+    <div class="player-badge" id="player-badge">
+      <div class="avatar" id="badge-avatar">A</div>
+      <span id="badge-name">Player</span>
+    </div>
+  </div>
 
-h1 { color: #2b78e4; margin: 0 0 10px 0; }
+  <div class="tab-row">
+    <div class="tab active" onclick="switchTab(this,'play-tab')">🎮 เล่นเกม</div>
+    <div class="tab" onclick="switchTab(this,'lb-tab')">🏆 อันดับ</div>
+  </div>
 
-@media screen and (max-width: 600px) {
-    h1, h2 {
-        font-size: 1.5rem;
-    }
+  <div id="play-tab">
+    <div class="section" style="margin-bottom:14px;">
+      <div class="section-title">📊 ระดับภาษา CEFR</div>
+      <div class="level-grid">
+        <div class="level-card a1" onclick="selectLevel('A1',this)">
+          <span class="level-badge">A1</span>
+          <div class="level-name">Beginner</div>
+          <div class="level-desc">คำพื้นฐานมาก</div>
+          <div class="level-lives">❤️❤️❤️❤️❤️ 5 ชีวิต</div>
+        </div>
+        <div class="level-card a2" onclick="selectLevel('A2',this)">
+          <span class="level-badge">A2</span>
+          <div class="level-name">Elementary</div>
+          <div class="level-desc">คำใช้บ่อยทั่วไป</div>
+          <div class="level-lives">❤️❤️❤️❤️ 4 ชีวิต</div>
+        </div>
+        <div class="level-card b1" onclick="selectLevel('B1',this)">
+          <span class="level-badge">B1</span>
+          <div class="level-name">Intermediate</div>
+          <div class="level-desc">คำระดับกลาง</div>
+          <div class="level-lives">❤️❤️❤️ 3 ชีวิต</div>
+        </div>
+        <div class="level-card b2" onclick="selectLevel('B2',this)">
+          <span class="level-badge">B2</span>
+          <div class="level-name">Upper-Inter</div>
+          <div class="level-desc">คำยากขึ้น</div>
+          <div class="level-lives">❤️❤️ 2 ชีวิต</div>
+        </div>
+      </div>
+    </div>
+    <div class="section" style="margin-bottom:14px;">
+      <div class="section-title">🃏 จำนวนคู่/รอบ</div>
+      <div class="pill-row">
+        <div class="pill" data-pairs="4" onclick="selectPill(this,'pairs')">4 คู่</div>
+        <div class="pill active" data-pairs="6" onclick="selectPill(this,'pairs')">6 คู่</div>
+        <div class="pill" data-pairs="8" onclick="selectPill(this,'pairs')">8 คู่</div>
+      </div>
+    </div>
+    <div class="section" style="margin-bottom:14px;">
+      <div class="section-title">⏱️ เวลา</div>
+      <div class="pill-row">
+        <div class="pill" data-time="120" onclick="selectPill(this,'time')">2 นาที</div>
+        <div class="pill" data-time="180" onclick="selectPill(this,'time')">3 นาที</div>
+        <div class="pill active" data-time="300" onclick="selectPill(this,'time')">5 นาที</div>
+        <div class="pill" data-time="600" onclick="selectPill(this,'time')">10 นาที</div>
+      </div>
+    </div>
+    <button class="btn-start" id="main-start-btn" onclick="startGame()" disabled>เลือกระดับก่อนนะ 👆</button>
+  </div>
 
-    .question {
-        margin-bottom: 15px;
-    }
-}
+  <div id="lb-tab" style="display:none;">
+    <div class="section">
+      <div class="section-title">🏆 ตารางอันดับ</div>
+      <div class="lb-filter" id="lb-filter">
+        <div class="lb-tag active" data-lv="ALL" onclick="filterLB(this)">ทุกระดับ</div>
+        <div class="lb-tag" data-lv="A1" onclick="filterLB(this)">A1</div>
+        <div class="lb-tag" data-lv="A2" onclick="filterLB(this)">A2</div>
+        <div class="lb-tag" data-lv="B1" onclick="filterLB(this)">B1</div>
+        <div class="lb-tag" data-lv="B2" onclick="filterLB(this)">B2</div>
+      </div>
+      <div id="lb-list" style="display:flex;flex-direction:column;gap:8px;max-height:360px;overflow-y:auto;"></div>
+    </div>
+  </div>
+</div>
 
-label { display:block; text-align:left; margin-top:10px; color:#555; }
-select, button {
-    width: 100%;
-    padding: 14px;
-    margin: 8px 0;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 18px;
-    background: #f8f8f8;
-}
+<!-- GAME -->
+<div id="game-screen" class="screen">
+  <div class="hud">
+    <div class="hud-item"><span class="hud-label">คะแนน</span><span class="hud-value" id="score-display" style="color:#ffd93d">0</span></div>
+    <div class="hud-item"><span class="hud-label">เวลา</span><span class="hud-value" id="timer-display" style="color:#4d96ff">5:00</span></div>
+    <div class="hud-item"><span class="hud-label">ชีวิต</span><span class="hud-value" id="lives-display" style="font-size:1rem">❤️❤️❤️</span></div>
+  </div>
+  <div class="progress-wrap"><div id="progress-bar" style="width:0%"></div></div>
+  <p class="batch-info" id="batch-info">รอบที่ 1</p>
+  <div id="game-area"></div>
+</div>
 
-button {
-    background: #2b78e4;
-    color: white;
-    cursor: pointer;
-    font-weight: bold;
-    border: none;
-}
-
-button:hover { background: #1f5bbf; }
-
-#controls { display:flex; gap:10px; }
-#controls button { flex:1; }
-
-#game-area {
-    margin-top: 14px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
-
-.card {
-    background: #f0f4fa;
-    padding: 18px;
-    border-radius: 8px;
-    cursor: pointer;
-    border: 1px solid #c5d3e6;
-    user-select: none;
-    transition: transform 0.12s ease, box-shadow 0.12s ease;
-    text-align: center;
-    font-size: 16px;
-}
-
-.card:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(43,120,228,0.12); }
-.card.selected { background: #cfe2ff; border-color: #6fa3ff; }
-.matched { background: #d4f4d1; border-color: #58b54a; pointer-events: none; opacity: 0.95; }
-
-#timeLeft { margin-top: 10px; color:#555; font-weight:bold; font-size:18px; }
-
-#result-box {
-    margin-top: 20px;
-    padding: 18px;
-    background: #f7f9fc;
-    border-radius: 8px;
-    border: 1px solid #d6d6d6;
-    display:none;
-    text-align:center;
-    font-size:18px;
-    font-weight:bold;
-}
+<!-- RESULT -->
+<div id="result-screen" class="screen">
+  <div class="result-box">
+    <div class="result-emoji" id="result-emoji">🏆</div>
+    <div class="result-title win" id="result-title">ชนะแล้ว!</div>
+    <div class="result-sub" id="result-sub">เก่งมากเลย!</div>
+    <div class="result-stats">
+      <div class="stat-box"><div class="stat-label">คะแนน</div><div class="stat-value" style="color:#ffd93d" id="final-score">0</div></div>
+      <div class="stat-box"><div class="stat-label">คู่ที่จับได้</div><div class="stat-value" style="color:#6bcb77" id="final-pairs">0</div></div>
+      <div class="stat-box"><div class="stat-label">ชีวิตที่เหลือ</div><div class="stat-value" style="color:#ff6b6b" id="final-lives">0</div></div>
+      <div class="stat-box"><div class="stat-label">เวลาที่ใช้</div><div class="stat-value" style="color:#4d96ff" id="final-time">0s</div></div>
+    </div>
+    <div style="margin-top:14px;padding:10px 14px;background:var(--card-bg);border-radius:12px;font-size:.82rem;color:var(--subtext);" id="result-rank-info"></div>
+  </div>
+  <div class="btn-row">
+    <button class="btn-sec" onclick="showScreen('setup-screen')">🏠 หน้าหลัก</button>
+    <button class="btn-pri" onclick="restartGame()">🔄 เล่นอีก</button>
+  </div>
+</div>
