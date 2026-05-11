@@ -1,6 +1,3 @@
-
- <script>
-// ===================== WORD BANK =====================
 const wordBank = {
   A1:[
     {w:"cat",m:"แมว"},{w:"dog",m:"สุนัข"},{w:"bird",m:"นก"},{w:"fish",m:"ปลา"},{w:"house",m:"บ้าน"},
@@ -331,7 +328,7 @@ function renderLB(level){
   }).join('');
 }
 
-// // ===================== SCREEN =====================
+// ===================== SCREEN =====================
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
