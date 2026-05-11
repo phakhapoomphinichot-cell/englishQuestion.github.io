@@ -366,6 +366,3 @@ function showScreen(id){
    INIT
    ============================================================ */
 initLogin();
-</script>
-</body>
-</html>
