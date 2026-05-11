@@ -1,4 +1,3 @@
-
 /* ============================================================
    WORD BANK
    ============================================================ */
@@ -280,56 +279,61 @@ function nextBatch() {
 }
 
 function renderCards(words) {
-
-  const leftCards = [];
-  const rightCards = [];
-
-  // แยกไทย / อังกฤษ
+  const cards = [];
   words.forEach(item => {
-
-    leftCards.push({
-      text: item.m,
-      pair: item.w
-    });
-
-    rightCards.push({
-      text: item.w,
-      pair: item.m
-    });
-
+    cards.push({ text: item.m, pair: item.w, side: 'left' });  // ไทย = ซ้าย
+    cards.push({ text: item.w, pair: item.m, side: 'right' }); // อังกฤษ = ขวา
   });
-
-  shuffleArray(leftCards);
-  shuffleArray(rightCards);
-
+  shuffleArray(cards);
   const area = document.getElementById('game-area');
   area.innerHTML = '';
+  cards.forEach((c, idx) => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.textContent = c.text;
+    div.dataset.pair = c.pair;
+    div.dataset.index = idx;
+    div.addEventListener('click', () => selectCard(div));
+    area.appendChild(div);
+  });
+}
 
-  // สร้างทีละแถว
-  for (let i = 0; i < words.length; i++) {
+function selectCard(card) {
+  if (lockSelection || card.classList.contains('matched') || card.classList.contains('selected')) return;
+  card.classList.add('selected');
+  selected.push(card);
 
-    // ไทย
-    const thai = document.createElement('div');
-    thai.className = 'card';
-    thai.textContent = leftCards[i].text;
-    thai.dataset.pair = leftCards[i].pair;
+  if (selected.length === 2) {
+    lockSelection = true;
+    const [a, b] = selected;
+    const isMatch = (a.dataset.pair === b.textContent && b.dataset.pair === a.textContent);
 
-    thai.addEventListener('click', () => selectCard(thai));
-
-    // อังกฤษ
-    const eng = document.createElement('div');
-    eng.className = 'card';
-    eng.textContent = rightCards[i].text;
-    eng.dataset.pair = rightCards[i].pair;
-
-    eng.addEventListener('click', () => selectCard(eng));
-
-    // บังคับตำแหน่ง
-    thai.style.gridColumn = "1";
-    eng.style.gridColumn = "2";
-
-    area.appendChild(thai);
-    area.appendChild(eng);
+    if (isMatch) {
+      a.classList.remove('selected'); a.classList.add('matched');
+      b.classList.remove('selected'); b.classList.add('matched');
+      matched++;
+      totalMatched++;
+      const pts = scorePerMatch[selectedLevel];
+      score += pts;
+      showScorePopup('+' + pts, b);
+      selected = [];
+      lockSelection = false;
+      updateHUD();
+      updateProgress();
+      if (matched === currentBatch.length) setTimeout(nextBatch, 600);
+    } else {
+      a.classList.add('wrong');
+      b.classList.add('wrong');
+      lives--;
+      updateHUD();
+      setTimeout(() => {
+        a.classList.remove('selected', 'wrong');
+        b.classList.remove('selected', 'wrong');
+        selected = [];
+        lockSelection = false;
+      }, 700);
+      if (lives <= 0) setTimeout(() => endGame(false, 'lives'), 800);
+    }
   }
 }
 
