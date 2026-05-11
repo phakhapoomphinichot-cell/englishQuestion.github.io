@@ -280,61 +280,60 @@ function nextBatch() {
 }
 
 function renderCards(words) {
-  const cards = [];
+
+  const leftCards = [];   // ไทย
+  const rightCards = [];  // อังกฤษ
+
   words.forEach(item => {
-    cards.push({ text: item.m, pair: item.w, side: 'left' });  // ไทย = ซ้าย
-    cards.push({ text: item.w, pair: item.m, side: 'right' }); // อังกฤษ = ขวา
+
+    // ไทย -> ซ้าย
+    leftCards.push({
+      text: item.m,
+      pair: item.w,
+      side: 'left'
+    });
+
+    // อังกฤษ -> ขวา
+    rightCards.push({
+      text: item.w,
+      pair: item.m,
+      side: 'right'
+    });
+
   });
-  shuffleArray(cards);
+
+  // สุ่มแยกฝั่ง
+  shuffleArray(leftCards);
+  shuffleArray(rightCards);
+
   const area = document.getElementById('game-area');
   area.innerHTML = '';
-  cards.forEach((c, idx) => {
-    const div = document.createElement('div');
-    div.className = 'card';
-    div.textContent = c.text;
-    div.dataset.pair = c.pair;
-    div.dataset.index = idx;
-    div.addEventListener('click', () => selectCard(div));
-    area.appendChild(div);
-  });
-}
 
-function selectCard(card) {
-  if (lockSelection || card.classList.contains('matched') || card.classList.contains('selected')) return;
-  card.classList.add('selected');
-  selected.push(card);
+  // สร้างเป็นแถว ซ้าย-ขวา
+  for (let i = 0; i < words.length; i++) {
 
-  if (selected.length === 2) {
-    lockSelection = true;
-    const [a, b] = selected;
-    const isMatch = (a.dataset.pair === b.textContent && b.dataset.pair === a.textContent);
+    const left = leftCards[i];
+    const right = rightCards[i];
 
-    if (isMatch) {
-      a.classList.remove('selected'); a.classList.add('matched');
-      b.classList.remove('selected'); b.classList.add('matched');
-      matched++;
-      totalMatched++;
-      const pts = scorePerMatch[selectedLevel];
-      score += pts;
-      showScorePopup('+' + pts, b);
-      selected = [];
-      lockSelection = false;
-      updateHUD();
-      updateProgress();
-      if (matched === currentBatch.length) setTimeout(nextBatch, 600);
-    } else {
-      a.classList.add('wrong');
-      b.classList.add('wrong');
-      lives--;
-      updateHUD();
-      setTimeout(() => {
-        a.classList.remove('selected', 'wrong');
-        b.classList.remove('selected', 'wrong');
-        selected = [];
-        lockSelection = false;
-      }, 700);
-      if (lives <= 0) setTimeout(() => endGame(false, 'lives'), 800);
-    }
+    // การ์ดไทย
+    const leftDiv = document.createElement('div');
+    leftDiv.className = 'card left';
+    leftDiv.textContent = left.text;
+    leftDiv.dataset.pair = left.pair;
+
+    leftDiv.addEventListener('click', () => selectCard(leftDiv));
+
+    // การ์ดอังกฤษ
+    const rightDiv = document.createElement('div');
+    rightDiv.className = 'card right';
+    rightDiv.textContent = right.text;
+    rightDiv.dataset.pair = right.pair;
+
+    rightDiv.addEventListener('click', () => selectCard(rightDiv));
+
+    // เพิ่มลง grid
+    area.appendChild(leftDiv);
+    area.appendChild(rightDiv);
   }
 }
 
