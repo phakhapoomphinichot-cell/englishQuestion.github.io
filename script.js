@@ -281,59 +281,55 @@ function nextBatch() {
 
 function renderCards(words) {
 
-  const leftCards = [];   // ไทย
-  const rightCards = [];  // อังกฤษ
+  const leftCards = [];
+  const rightCards = [];
 
+  // แยกไทย / อังกฤษ
   words.forEach(item => {
 
-    // ไทย -> ซ้าย
     leftCards.push({
       text: item.m,
-      pair: item.w,
-      side: 'left'
+      pair: item.w
     });
 
-    // อังกฤษ -> ขวา
     rightCards.push({
       text: item.w,
-      pair: item.m,
-      side: 'right'
+      pair: item.m
     });
 
   });
 
-  // สุ่มแยกฝั่ง
   shuffleArray(leftCards);
   shuffleArray(rightCards);
 
   const area = document.getElementById('game-area');
   area.innerHTML = '';
 
-  // สร้างเป็นแถว ซ้าย-ขวา
+  // สร้างทีละแถว
   for (let i = 0; i < words.length; i++) {
 
-    const left = leftCards[i];
-    const right = rightCards[i];
+    // ไทย
+    const thai = document.createElement('div');
+    thai.className = 'card';
+    thai.textContent = leftCards[i].text;
+    thai.dataset.pair = leftCards[i].pair;
 
-    // การ์ดไทย
-    const leftDiv = document.createElement('div');
-    leftDiv.className = 'card left';
-    leftDiv.textContent = left.text;
-    leftDiv.dataset.pair = left.pair;
+    thai.addEventListener('click', () => selectCard(thai));
 
-    leftDiv.addEventListener('click', () => selectCard(leftDiv));
+    // อังกฤษ
+    const eng = document.createElement('div');
+    eng.className = 'card';
+    eng.textContent = rightCards[i].text;
+    eng.dataset.pair = rightCards[i].pair;
 
-    // การ์ดอังกฤษ
-    const rightDiv = document.createElement('div');
-    rightDiv.className = 'card right';
-    rightDiv.textContent = right.text;
-    rightDiv.dataset.pair = right.pair;
+    eng.addEventListener('click', () => selectCard(eng));
 
-    rightDiv.addEventListener('click', () => selectCard(rightDiv));
+    // บังคับตำแหน่ง
+    thai.style.gridColumn = "1";
+    eng.style.gridColumn = "2";
 
-    // เพิ่มลง grid
-    area.appendChild(leftDiv);
-    area.appendChild(rightDiv);
+    area.appendChild(thai);
+    area.appendChild(eng);
   }
 }
 
