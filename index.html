@@ -4,3 +4,35 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>English Match Game 🎯</title>
+<div id="game-screen" class="screen">
+  <div class="hud">
+    <div class="hud-item"><span class="hud-label">คะแนน</span><span class="hud-value" id="score-display" style="color:#ffd93d">0</span></div>
+    <div class="hud-item"><span class="hud-label">เวลา</span><span class="hud-value" id="timer-display" style="color:#4d96ff">5:00</span></div>
+    <div class="hud-item"><span class="hud-label">ชีวิต</span><span class="hud-value" id="lives-display" style="font-size:1rem">❤️❤️❤️</span></div>
+  </div>
+  <div class="progress-wrap"><div id="progress-bar" style="width:0%"></div></div>
+  <p class="batch-info" id="batch-info">รอบที่ 1</p>
+  <div id="game-area"></div>
+</div>
+
+<!-- ============================================================
+     RESULT SCREEN
+     ============================================================ -->
+<div id="result-screen" class="screen">
+  <div class="result-box">
+    <div class="result-emoji" id="result-emoji">🏆</div>
+    <div class="result-title win" id="result-title">ชนะแล้ว!</div>
+    <div class="result-sub" id="result-sub">เก่งมากเลย!</div>
+    <div class="result-stats">
+      <div class="stat-box"><div class="stat-label">คะแนน</div><div class="stat-value" style="color:#ffd93d" id="final-score">0</div></div>
+      <div class="stat-box"><div class="stat-label">คู่ที่จับได้</div><div class="stat-value" style="color:#6bcb77" id="final-pairs">0</div></div>
+      <div class="stat-box"><div class="stat-label">ชีวิตที่เหลือ</div><div class="stat-value" style="color:#ff6b6b" id="final-lives">0</div></div>
+      <div class="stat-box"><div class="stat-label">เวลาที่ใช้</div><div class="stat-value" style="color:#4d96ff" id="final-time">0s</div></div>
+    </div>
+    <div style="margin-top:14px;padding:10px 14px;background:var(--card-bg);border-radius:12px;font-size:.82rem;color:var(--subtext);" id="result-rank-info"></div>
+  </div>
+  <div class="btn-row">
+    <button class="btn-sec" onclick="showScreen('setup-screen')">🏠 หน้าหลัก</button>
+    <button class="btn-pri" onclick="restartGame()">🔄 เล่นอีก</button>
+  </div>
+</div>
