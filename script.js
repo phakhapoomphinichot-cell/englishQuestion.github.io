@@ -281,8 +281,8 @@ function nextBatch() {
 function renderCards(words) {
   const cards = [];
   words.forEach(item => {
-    cards.push({ text: item.m, pair: item.w, side: 'left' });  // ไทย = ซ้าย
-    cards.push({ text: item.w, pair: item.m, side: 'right' }); // อังกฤษ = ขวา
+    cards.push({ text: item.w, pair: item.m });
+    cards.push({ text: item.m, pair: item.w });
   });
   shuffleArray(cards);
   const area = document.getElementById('game-area');
